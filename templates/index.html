@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}留言板{% endblock %}
+
+{% block content %}
+  <h1>留言板</h1>
+
+  <form class="form" action="{{ url_for('add_message') }}" method="post">
+    <input type="text" name="name" placeholder="你的昵称（20 字以内）" maxlength="20" required>
+    <textarea name="content" placeholder="写点什么吧（200 字以内）" maxlength="200" required></textarea>
+    <button type="submit">发布留言</button>
+  </form>
+
+  <p class="count">共 {{ messages|length }} 条留言</p>
+
+  <ul class="list">
+    {% for m in messages %}
+      <li class="card">
+        <div class="meta">
+          <strong>{{ m["name"] }}</strong>
+          <span>{{ m["created_at"] }}</span>
+        </div>
+        <p class="content">{{ m["content"] }}</p>
+        <form action="{{ url_for('delete_message', message_id=m['id']) }}" method="post"
+              onsubmit="return confirm('确定删除这条留言吗？');">
+          <button type="submit" class="del">删除</button>
+        </form>
+      </li>
+    {% else %}
+      <li class="empty">还没有留言，来发第一条吧。</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
